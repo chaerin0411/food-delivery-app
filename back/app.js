@@ -90,7 +90,7 @@ app.post("/refreshToken", verifyRefreshToken, (req, res, next) => {
   res.json({
     data: {
       accessToken,
-      email: res.locals.email,
+      email: res.locals.email.toLowerCase(),
       name: users[res.locals.email].name,
     },
   });

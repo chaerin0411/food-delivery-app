@@ -1,12 +1,12 @@
 import React, {useCallback, useRef, useState} from 'react';
 import {
+  ActivityIndicator,
   Alert,
   Pressable,
   StyleSheet,
   Text,
   TextInput,
   View,
-  ActivityIndicator,
 } from 'react-native';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import EncryptedStorage from 'react-native-encrypted-storage';
@@ -56,6 +56,7 @@ function SignIn({navigation}: SignInScreenProps) {
           name: response.data.data.name,
           email: response.data.data.email,
           accessToken: response.data.data.accessToken,
+          refreshToken: response.data.data.refreshToken,
         }),
       );
       await EncryptedStorage.setItem(
@@ -122,7 +123,7 @@ function SignIn({navigation}: SignInScreenProps) {
               ? StyleSheet.compose(styles.loginButton, styles.loginButtonActive)
               : styles.loginButton
           }
-          disabled={!canGoNext || loading}
+          disabled={!canGoNext}
           onPress={onSubmit}>
           {loading ? (
             <ActivityIndicator color="white" />
