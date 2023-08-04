@@ -1,28 +1,18 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { configureStore } from "@reduxjs/toolkit";
+import { useDispatch } from "react-redux";
+import rootReducer from "./reducer";
 
-const initialState = {
-  name: "",
-  email: "",
-  accessToken: "",
-  money: 0,
-};
-const userSlice = createSlice({
-  name: "user",
-  initialState,
-  reducers: {
-    setUser(state, action) {
-      state.email = action.payload.email;
-      state.name = action.payload.name;
-      state.accessToken = action.payload.accessToken;
-    },
-    setAccessToken(state, action) {
-      state.accessToken = action.payload;
-    },
-    setMoney(state, action) {
-      state.money = action.payload;
-    },
+const store = configureStore({
+  reducer: rootReducer,
+  middleware: (getDefaultMiddleware) => {
+    if (__DEV__) {
+      const createDebugger = require("redux-flipper").default;
+      return getDefaultMiddleware().concat(createDebugger());
+    }
+    return getDefaultMiddleware();
   },
-  extraReducers: (builder) => {},
 });
+export default store;
 
-export default userSlice;
+export type AppDispatch = typeof store.dispatch;
+export const useAppDispatch = () => useDispatch<AppDispatch>();

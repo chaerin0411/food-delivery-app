@@ -17,6 +17,7 @@ import userSlice from './src/slices/user';
 import {useAppDispatch} from './src/store';
 import Config from 'react-native-config';
 import orderSlice from './src/slices/order';
+import usePermissions from './src/hooks/usePermissions';
 
 export type LoggedInParamList = {
   Orders: undefined;
@@ -24,7 +25,6 @@ export type LoggedInParamList = {
   Delivery: undefined;
   Complete: {orderId: string};
 };
-
 export type RootStackParamList = {
   SignIn: undefined;
   SignUp: undefined;
@@ -39,6 +39,8 @@ function AppInner() {
   console.log('isLoggedIn', isLoggedIn);
 
   const [socket, disconnect] = useSocket();
+
+  usePermissions();
 
   // 앱 실행 시 토큰 있으면 로그인하는 코드
   useEffect(() => {
@@ -66,7 +68,7 @@ function AppInner() {
         );
       } catch (error) {
         console.error(error);
-        if ((error as AxiosError<AxiosError>).response?.data.code === 'expired') {
+        if ((error as AxiosError).response?.data.code === 'expired') {
           Alert.alert('알림', '다시 로그인 해주세요.');
         }
       }
@@ -139,7 +141,7 @@ function AppInner() {
       <Tab.Screen
         name="Delivery"
         component={Delivery}
-        options={{title: '내 오더'}}
+        options={{headerShown: false}}
       />
       <Tab.Screen
         name="Settings"
